@@ -10,3 +10,8 @@ RC: Kuyper
 Name: Song haaha - f
 Year: 16
 RC: Sonyangwon
+======================
+Name: Yang Yejin - f
+Year: 18
+RC: Kuyper
+

@@ -3,17 +3,22 @@
 #include <stdlib.h>
 #include "base.h"
 
+
+// Get # of members
+int Count(Record records[]){
+	int count = 0;   //get # of records
+    while(records[count].id!='\0') count++;
+	return count;
+}
+
 // Function: print_all_records()
 // Input: record - array of Records; this may contain empty elements in the middle
 // Output: none
 // print all records on memory
 void print_all_records(Record records[]){
-	// TODO: Modify this function as you need
-	printf("print_all_records(): this function needs to be implemented\n\n");
-    
-    int count = 0;   //get # of records
-    while(records[count].id!='\0') count++;
-    //printf("count : %d\n", count);
+
+	// TODO: Modify this function as you need    
+    int count = Count(records);   //get # of records
 
     printf("T - Torrey / J - Jankiryew / K - Kyuper / S - Sonyangwon / P - Philadelphos / C - Carmichael\n");
     printf("\tName\t\tYear\tRC\tGender\n");
@@ -30,15 +35,13 @@ void print_all_records(Record records[]){
 // Function: add_a_record()
 // Input: record - array of Records; this may contain empty elements in the middle
 // Output: none
-// 1. You can "add" all data from report.txt.
+// 1. You can "add" data from report.txt.
+//After 4.18, add data from not report.txt but data.txt
 // 2. Or you can "add" a record(data) by taking your input.
 void add_a_record(Record records[]){
-	// TODO: Modify this function as you need
-	printf("add_a_record(): this function needs to be implemented\n\n");
-    
-    int count = 0;   //get # of records
-    while(records[count].id!='\0') count++;
-    //printf("count : %d\n", count);
+
+	// TODO: Modify this function as you need    
+    int count = Count(records);   //get # of records
     
     int w;  // whether input from file or from standard input. 1 - .txt 2 - stdin
 	printf("Choose whether you add a record from \"report.txt\" or from your input.\n");
@@ -46,42 +49,31 @@ void add_a_record(Record records[]){
     scanf("%d",&w);
     
     if(w == 1){
-        //open report.txt on read mode
-        FILE *fp = fopen("report.txt", "r");
-        char buffer[128];
-        
-        if(fp == NULL){ 
+
+        FILE *fpd = fopen("data.txt","r");
+        char buffer[128];   //to get line until EOF
+        int i=0;
+        if(fpd == NULL){ 
             printf("ERROR during open file.\n");
             exit(-1);
         }
+
+        fgets(buffer, sizeof(buffer), fpd);
+        if(buffer[strlen(buffer)-1] == '\n')
+            buffer[strlen(buffer)-1] = '\0';    //trim '\n'
         
-        printf("Read first student information of report.txt\n");
-        
-        for(int i=0;i<4;i++){
-            fgets(buffer, sizeof(buffer), fp);
-            buffer[strlen(buffer)-1] = '\0';
-            if(buffer[0]=='N'){
-                records[count].id = count+1;
-                //sscanf(buffer, "%*s %[^(]s %s", records[count].name,&records[count].gender);
-                sscanf(buffer, "%*s %[^-]s", records[count].name);
-                records[count].name[strlen(records[count].name)-1]='\0';
-                sscanf(buffer, "%*s %*s %*s%*c%*c%*c%c", &(records[count].gender));
-                printf("Name: %s Gender: %c\n", records[count].name, records[count].gender);
-                count++;
-            }
-            if(buffer[0] == 'Y'){
-                sscanf(buffer,"%*s %d",&records[count-1].year);
-                printf("year: %d",records[count-1].year);
-            }
-            if(buffer[0] == 'R'){
-                char str[20];
-                //sscanf(buffer, "%*s %c",&records[count-1].rc);
-                sscanf(buffer, "%*s %s",str);
-                records[count-1].rc = str[0];
-                printf(" RC: %c\n",records[count-1].rc);
-            }
+        if(buffer[0]!='\n'&&buffer[0]!='\0'){
+            records[count].id = count+1;
+            char str1[20];
+            char str2[20];
+            char str_rc[20];
+            sscanf(buffer,"%s %s %c %d %s",str1, str2,&records[count].gender, &records[count].year,str_rc);
+            strcat(str1," ");
+            strcat(str1,str2);
+            strcpy(records[count].name,str1);
+            records[count].rc = str_rc[0];
         }
-        fclose(fp);
+        fclose(fpd);
         getchar();
     }else if(w == 2){
         Record newmem;
@@ -144,8 +136,7 @@ void add_a_record(Record records[]){
 void list_record(Record records[]){
     char list;
 
-    int count = 0;   //get # of records
-    while(records[count].id!='\0') count++;
+    int count = Count(records);   //get # of records
     //printf("count : %d\n", count);
     
     int check =0;   // Is/Are there member/s according to your input?
@@ -159,7 +150,7 @@ void list_record(Record records[]){
         for(int i=0; i<count;i++){
             if(records[i].rc == rc){
                 check = 1;
-                printf(" Name: %s Year: %d \n", records[i].name, records[i].year);
+                printf(" Name: %s Year: %d Gender: %c\n", records[i].name, records[i].year, records[i].gender);
             }
         }
         if(check == 0)
@@ -178,7 +169,7 @@ void list_record(Record records[]){
         for(int i=0 ;i<count;i++){
             if(records[i].year == year){
                 check = 1;
-                printf(" Name: %s RC: %c \n", records[i].name, records[i].rc);
+                printf(" Name: %s RC: %c Gender: %c\n", records[i].name, records[i].rc, records[i].gender);
             }
         }        
         if(check == 0)
@@ -197,13 +188,14 @@ void list_record(Record records[]){
 void load(Record records[]){
 
     //reset existing memory
-    int count = 0;   //get # of records
-    while(records[count].id!='\0') count++;
-    for(int i=0; i<count;i++){
+    int count = Count(records);   //get # of records
+    
+    // Clear the records existing by memset with 0
+    for(int i=0; i<count;i++)
         memset(&records[i],0,sizeof(Record));
-    }
-    //open report.txt on read mode
-    FILE *fp = fopen("report.txt", "r");
+
+    //open data.txt on read mode
+    FILE *fp = fopen("data.txt", "r");
     char buffer[128];   //to get line until EOF
     int i=0;
     if(fp == NULL){ 
@@ -212,27 +204,28 @@ void load(Record records[]){
     }
     //Repeat until EOF, load all records from report.txt
     while(!feof(fp)){
+        
         fgets(buffer, sizeof(buffer), fp);
-        buffer[strlen(buffer)-1] = '\0';
-        if(buffer[0]=='N'){
+        if(buffer[strlen(buffer)-1] == '\n')
+            buffer[strlen(buffer)-1] = '\0';    //trim '\n'
+        
+        if(buffer[0]!='\n'&&buffer[0]!='\0'){
             records[i].id = i+1;
-            sscanf(buffer, "%*s %[^-]s", records[i].name);
-            records[i].name[strlen(records[i].name)-1] = '\0';      //trim " "
-            sscanf(buffer, "%*s %*s %*s%*c%*c%*c%c", &(records[i].gender));
-            printf("Name: %s Gender: %c\n", records[i].name, records[i].gender);
-            i++;    
-        }
-        if(buffer[0] == 'Y'){
-            sscanf(buffer,"%*s %d",&records[i-1].year);
-            printf("year: %d",records[i-1].year);
-        }
-        if(buffer[0] == 'R'){
-            char str[20] = {0,};
-            sscanf(buffer, "%*s %s",str);
-            records[i-1].rc = str[0];       //records[i].rc's type is character
-            printf(" RC: %c\n",records[i-1].rc);
+            char str1[20];
+            char str2[20];
+            char str_rc[20];
+            sscanf(buffer,"%s %s %c %d %s",str1, str2,&records[i].gender, &records[i].year,str_rc);
+            strcat(str1," ");
+            strcat(str1,str2);
+            strcpy(records[i].name,str1);
+            if(str_rc[0] == 'T' || str_rc[0] == 'J'|| str_rc[0] =='K'||str_rc[0] =='S'||str_rc[0] =='P'||str_rc[0] =='C')
+                records[i].rc = str_rc[0];
+            i++;
         }
     }
+    print_all_records(records);
+    //clear standard output
+    fflush(stdout);
     //close file
     fclose(fp);
 }
@@ -245,12 +238,10 @@ void save_export(Record records[]){
     //open report.txt on write mode
     FILE *fp = fopen("report.txt","w");
 
-    int count = 0;   //get # of records
-    while(records[count].id!='\0') count++;
-    //printf("count : %d\n", count);
+    int count = Count(records);   //get # of records
+    //while(records[count].id!='\0') count++;
     for(int i=0;i<count;i++){
-        //fseek(fp,0,SEEK_END);
-        fputs("\n======================\n",fp);
+        fputs("======================\n",fp);
         fprintf(fp,"Name: %s - %c\n",records[i].name, records[i].gender);
         fprintf(fp,"Year: %d\n",records[i].year);
         char rc = records[i].rc;
@@ -273,22 +264,22 @@ void save_export(Record records[]){
             case 'C':
                 fprintf(fp,"RC: Carmichael");
                 break;
+            default:
+                fprintf(fp,"RC: ");
         }
+        fputs("\n",fp);
     }
     //close file
     fclose(fp);
 }
 
-
 //Update
 void update_detail(Record records[]){
     print_all_records(records);
     
-    int count = 0;   //get # of records
-    while(records[count].id!='\0') count++;
-    
+    int count = Count(records);   //get # of records
+
     Record old;
-    
     Record update;
 
     // ask which student you want to update, input number(id) of list.
@@ -305,13 +296,13 @@ void update_detail(Record records[]){
     }
 
     // update information of records[id - 1]
-    // if you want leave the same for specific elements, input '\n'.
+    // if you want leave the same for specific elements, input '\n' or '0'.
     //printf("If you enter for an element, that element will be left same.\n");
     
     // Name
     getchar();
     printf("** 1. Input name to update\n(If you want to leave this element same, input 'enter'): ");
-     // check # of space in name input;
+    // check # of space in name input;
     while(1){
         int space = 0;
         fgets(update.name,20,stdin);
@@ -378,60 +369,65 @@ void update_detail(Record records[]){
     scanf(" %c",&yes_no);
     
     if(yes_no == 'y'){   // yes -> memcpy(&records[id-1],&update,sizeof(Record))
-        update.id = id-1;
+        update.id = id;
         memcpy(&records[id-1],&update,sizeof(Record));
     }
     print_all_records(records);
     getchar();      // trim '\n' for menu
 }
+
 //Delete
-void delete_a_member(Record records[]){
-    int count = 0;   //get # of records
-    while(records[count].id!='\0') count++;
+void Delete(Record records[]){
+    int count = Count(records);   //get # of records
+    int op = 0;
     
-    int quit = 0;
-    int num = 0;
     printf("Delete a member(input 1) or a specific elements(input 2), quit (input 0): ");
-    scanf("%d",&quit);
-    if(quit == 0) {
+    scanf("%d",&op);
+
+    if(op == 0) {
         getchar();
-        exit(0);
+        return;
     }
-    if(quit == 1){
-        printf("Choose # of list you want delete: ");
-        scanf("%d",&num);
-        records[num-1].name[0] = '\0';
-        records[num-1].year = '\0';
-        records[num-1].rc = '\0';
-        records[num-1].gender = '\0';
-        //records[num-1].id = '\0';
-        for(int i =0; i<count; i++){
-            printf("id = %d \n",records[i].id);
-        }
-    }else if(quit == 2){
-        int choose = 0;
-        printf("Choose # of list you want delete specific element: ");
-        scanf("%d",&num);
-        printf("Input number what you want to delete(Name - 1, Year - 2, RC - 3, Gender - 4): ");
-        scanf("%d",&choose);
-        switch(choose){
-            case 1:
-                records[num-1].name[0] = '\0';
-                break;
-            case 2:
-                records[num-1].year = '\0';
-                break;
-            case 3:
-                records[num-1].rc = '\0';
-                break;
-            case 4:
-                records[num-1].gender = '\0';
-                break;
-            default:
-                printf("Nothing to delete.\n");
-                break;
-        }
-    }
+    else if(op == 1)
+        delete_member(records);
+    else if(op == 2)
+        delete_detail(records);
+
     print_all_records(records);
     getchar();
+}
+
+void delete_member(Record records[]){
+    int num = 0;
+    printf("Choose # member of list you want delete: ");
+    scanf("%d",&num);
+    records[num-1].name[0] = '\0';
+    records[num-1].year = '\0';
+    records[num-1].rc = '\0';
+    records[num-1].gender = '\0';
+}
+
+void delete_detail(Record records[]){
+    int num = 0;
+    int choose = 0;
+    printf("Choose # of list you want delete specific element: ");
+    scanf("%d",&num);
+    printf("Input number what you want to delete(Name - 1, Year - 2, RC - 3, Gender - 4): ");
+    scanf("%d",&choose);
+    switch(choose){
+        case 1:
+            records[num-1].name[0] = '\0';
+            break;
+        case 2:
+            records[num-1].year = '\0';
+            break;
+        case 3:
+            records[num-1].rc = '\0';
+            break;
+        case 4:
+            records[num-1].gender = '\0';
+            break;
+        default:
+            break;
+    }
 }

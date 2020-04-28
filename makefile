@@ -7,7 +7,7 @@ main.o: main.c base.h extras.h record.h
 base.o: base.h base.c
 	gcc -c -o base.o base.c
 
-extras.o: extras.h extras.c
+extras.o: extras.h base.h extras.c
 	gcc -c -o extras.o extras.c
 
 clean:

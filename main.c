@@ -36,31 +36,31 @@ void input_handler(char input[], Record records[]){
 	// TODO: Modify this function as you need
 	int defr = 0;
 
-	if(!strcmp(input, "1"))			//Create 1 & 2
+	if(!strcmp(input, "1"))			// Create
 		add_a_record(records);
-	else if(!strcmp(input, "2"))	//Delete
-		delete_a_member(records);
-	else if(!strcmp(input, "3"))	//
+	else if(!strcmp(input, "2"))	// Delete
+		Delete(records);
+	else if(!strcmp(input, "3"))	// Read
 		print_all_records(records);	
-	else if(!strcmp(input, "4"))	//Update	
+	else if(!strcmp(input, "4"))	// Update	
 		update_detail(records);
-	else if(!strcmp(input, "5"))	//Read 1
+	else if(!strcmp(input, "5"))	// Read
 		list_record(records);
-	else if(!strcmp(input, "6")){	//extras
+	else if(!strcmp(input, "6")){	// extras
 		defr = defragment(records);
 		if(defr) printf("\n**Defragment successful!\n");
 		else	printf("\n**Defragment failed. There is no empty record.\n");
 	}
-	else if(!strcmp(input, "7"))	//extras
+	else if(!strcmp(input, "7"))	// extras
 		search_name(records);
-	else if(!strcmp(input, "8"))	//read
+	else if(!strcmp(input, "8"))	// read
 		load(records);
-	else if(!strcmp(input, "9"))	//read
+	else if(!strcmp(input, "9"))	// read
 		save_export(records);
-	else if(!strcmp(input, "12"))	//extras
-		display_stats(records);	
-	else if(!strcmp(input, "13"))	
-	;
+	else if(!strcmp(input, "10"))	// extras
+		ratio_gender(records);
+	else if(!strcmp(input, "11"))	// extras
+		sort(records);
 	else if(!strcmp(input, "99"))
 		printf("Terminating... bye!\n"); // Quit - no operation (an empty statement with a semi-colon)
 	else
@@ -85,14 +85,11 @@ void display_menu(){
 	printf(" 4. Update member details\n");
 	printf(" 5. Students list\n");
 	printf(" 6. Defragment\n");
-//	printf(" 6. School year ratio (RC)\n");
-	printf(" 7. Gender ratio(RC)\n");
+	printf(" 7. Search\n");
 	printf(" 8. Load a new data file\n");	
 	printf(" 9. Save(export) to a data file\n");
-	printf(" 10. Search (name/age/RC)\n");
-	//printf(" 11. \n");
-	
+	printf(" 10. Gender ratio\n");
+	printf(" 11. Sorting\n");
 	printf(" 99. Quit\n");
 }
-
 

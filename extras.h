@@ -14,5 +14,5 @@ void swap(Record*, Record*);
 int RCtoNum(char);
 void sort(Record[]);
 void ratio_gender(Record[]);
-
+void search_gen_rc(Record[]);
 #endif

@@ -44,7 +44,7 @@ void add_a_record(Record records[]){
     int count = Count(records);   //get # of records
     
     int w;  // whether input from file or from standard input. 1 - .txt 2 - stdin
-	printf("Choose whether you add a record from \"report.txt\" or from your input.\n");
+	printf("Choose whether you add a record from \"data.txt\" or from your input.\n");
     printf("(from .txt - 1 / from your input - 2) ");
     scanf("%d",&w);
     

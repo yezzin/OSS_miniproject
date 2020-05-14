@@ -61,6 +61,8 @@ void input_handler(char input[], Record records[]){
 		ratio_gender(records);
 	else if(!strcmp(input, "11"))	// extras
 		sort(records);
+	else if(!strcmp(input, "12"))   // extras
+		search_gen_rc(records);
 	else if(!strcmp(input, "99"))
 		printf("Terminating... bye!\n"); // Quit - no operation (an empty statement with a semi-colon)
 	else
@@ -90,6 +92,7 @@ void display_menu(){
 	printf(" 9. Save(export) to a data file\n");
 	printf(" 10. Gender ratio\n");
 	printf(" 11. Sorting\n");
+	printf(" 12. Search(gender and rc)\n");
 	printf(" 99. Quit\n");
 }
 

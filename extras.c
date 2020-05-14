@@ -308,3 +308,38 @@ void ratio_gender(Record records[]){
 	printf("-->\nmale = %.1f%%\nfemale %.1f%%\nundefined %.1f%%\n(total %d)\n", m,f,un, count);
 }
 
+void search_gen_rc(Record records[]){
+	// input one or more characters
+	char str[20];	
+	int count = Count(records);
+  char findrc;
+  char findgen;
+  int num=0;
+
+	Record search[count];		// search have smaller number than records
+  printf("Input rc you want to search (T,J,K,S,P,C) :");
+  scanf("%c",&findrc);
+  getchar();
+
+	printf("Input gender you want to search (f or m): ");
+	scanf("%c",&findgen);
+  getchar();
+
+    printf("T - Torrey / J - Jankiryew / K - Kyuper / S - Sonyangwon / P - Philadelphos / C - Carmichael\n");
+    printf("\tName\t\tYear\tRC\tGender\n");
+    for(int i=0 ; i<count ;i++){
+      if(findrc==records[i].rc && findgen==records[i].gender){
+        num++;
+        if(strlen(records[i].name)>=8){
+          printf("%d.\t%s\t%d\t%c\t%c\n",num,records[i].name,records[i].year,records[i].rc,records[i].gender);
+        }
+        else{
+          printf("%d.\t%s\t\t%d\t%c\t%c\n",num,records[i].name,records[i].year,records[i].rc,records[i].gender);
+        }
+      }
+      else{
+        continue;
+      }
+    }
+    printf("\n");  
+}
